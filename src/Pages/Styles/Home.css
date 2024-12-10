@@ -1,0 +1,27 @@
+.main-container{
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.search-bar{
+    margin-top: 1.5%;
+    width: 30vw;
+}
+
+.card-container{
+    margin-top: 5%;
+    width: 70%;
+}
+.input-container{
+    width: 50%;
+}
+.footer-btn-tray{
+    margin-top: 1.5%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1.5%;
+}
