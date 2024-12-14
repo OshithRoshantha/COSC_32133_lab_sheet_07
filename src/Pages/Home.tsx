@@ -19,6 +19,8 @@ function Home(){
     const [cityInput, setCityInput] = useState<string>('');
     const [descriptionInput, setDescriptionInput] = useState<string>('');
     const [searchQuery, setSearchQuery] = useState<string>('');
+    const [showDesc, setShowDesc] = useState<boolean>(false);
+    const [selectedDesc, setSelectedDesc] = useState<string>('');
 
     useEffect(() => {
         localStorage.setItem('cities', JSON.stringify(cities));
@@ -50,6 +52,10 @@ function Home(){
         descriptions[index].toLowerCase().includes(searchQuery.toLowerCase())
     );
 
+    function clearSelection(): void {
+        setShowDesc(false);
+    }
+
     return(
         <>
         <div className='main-container'>
@@ -57,12 +63,18 @@ function Home(){
             <div className='search-bar' >
                 <Form.Control type="text" placeholder="Search for a city" onChange={handleSearchCity} value={searchQuery}/>
             </div>
-            <div className='result_container'>
+            <div className='result-container'>
                 <h2>Available Cities</h2>
             </div>  
             {cities.length>0 && 
-                <ListGroupComponent cities={filteredCities} descriptions={descriptions} />
+                <ListGroupComponent cities={filteredCities} descriptions={descriptions} setShowDesc={setShowDesc} setSelectedDesc={setSelectedDesc}/>
             }
+            {showDesc &&
+            <div className='desc-container'>
+                <h2>Description</h2>
+                <p>{selectedDesc}</p>
+            </div> 
+            } 
             <div className='card-container'>
                 <Card>
                     <Card.Body>
@@ -76,7 +88,7 @@ function Home(){
                     <Button variant="success" onClick={handleAddCity}>Add City</Button>
                 </div>
             </div>
-            <Button variant="danger" onClick={clearStorage}>Reset City Selection</Button>
+            <Button variant="danger" onClick={clearSelection}>Reset City Selection</Button>
         </div>
         </>
     );
