@@ -2,54 +2,66 @@ import Card from 'react-bootstrap/Card';
 import './Styles/Home.css'
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-import React, { useEffect } from 'react';
+import React, {useState, useEffect } from 'react';
 import ListGroupComponent from '../Components/ListGroup';
 
 function Home(){
-    const [cities, setCities] = React.useState<string[]>(() => {
+    const [cities, setCities] = useState<string[]>(() => {
         const savedCities = localStorage.getItem('cities');
         return savedCities ? JSON.parse(savedCities) : [];
     });
-    const [descriptions, setDescriptions] = React.useState<string[]>(() => {
+
+    const [descriptions, setDescriptions] = useState<string[]>(() => {
         const savedDescriptions = localStorage.getItem('descriptions');
         return savedDescriptions ? JSON.parse(savedDescriptions) : [];
     });
-    const [cityInput, setCityInput] = React.useState('');
-    const [descriptionInput, setDescriptionInput] = React.useState('');
+
+    const [cityInput, setCityInput] = useState<string>('');
+    const [descriptionInput, setDescriptionInput] = useState<string>('');
+    const [searchQuery, setSearchQuery] = useState<string>('');
 
     useEffect(() => {
         localStorage.setItem('cities', JSON.stringify(cities));
     }, [cities]);
-    
+
     useEffect(() => {
         localStorage.setItem('descriptions', JSON.stringify(descriptions));
     }, [descriptions]);
 
-    function handleAddCity(){
-        setCities([...cities, cityInput]);
-        setDescriptions([...descriptions, descriptionInput]);
+    function handleAddCity(): void {
+        setCities((prevCities) => [...prevCities, cityInput]);
+        setDescriptions((prevDescriptions) => [...prevDescriptions, descriptionInput]);
         setCityInput('');
         setDescriptionInput('');
     }
 
-    function clearStorge(){
+    function clearStorage(): void {
         localStorage.clear();
-        setCities([]); 
+        setCities([]);
         setDescriptions([]);
     }
+
+    function handleSearchCity(e: React.ChangeEvent<HTMLInputElement>): void {
+        setSearchQuery(e.target.value);
+    }
+
+    const filteredCities = cities.filter((city, index) => 
+        city.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        descriptions[index].toLowerCase().includes(searchQuery.toLowerCase())
+    );
 
     return(
         <>
         <div className='main-container'>
             <h1>City Explorer</h1>
             <div className='search-bar' >
-                <Form.Control type="text" placeholder="Search for a city"/>
+                <Form.Control type="text" placeholder="Search for a city" onChange={handleSearchCity} value={searchQuery}/>
             </div>
-            <div className='list-container'>
+            <div className='result_container'>
                 <h2>Available Cities</h2>
             </div>  
             {cities.length>0 && 
-                <ListGroupComponent cities={cities} descriptions={descriptions} />
+                <ListGroupComponent cities={filteredCities} descriptions={descriptions} />
             }
             <div className='card-container'>
                 <Card>
@@ -64,7 +76,7 @@ function Home(){
                     <Button variant="success" onClick={handleAddCity}>Add City</Button>
                 </div>
             </div>
-            <Button variant="danger" onClick={clearStorge}>Reset City Selection</Button>
+            <Button variant="danger" onClick={clearStorage}>Reset City Selection</Button>
         </div>
         </>
     );
