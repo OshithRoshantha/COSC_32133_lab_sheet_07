@@ -5,7 +5,6 @@ import ListGroup from 'react-bootstrap/ListGroup';
 function ListGroupComponent({cities,descriptions}) {
     return (
         <div className='list-container'>
-            <h2>Available Cities</h2>
             <Card>
                 <ListGroup>
                     {cities.map((city, index) => (

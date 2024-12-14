@@ -45,7 +45,12 @@ function Home(){
             <div className='search-bar' >
                 <Form.Control type="text" placeholder="Search for a city"/>
             </div>
-            <ListGroupComponent cities={cities} descriptions={descriptions} />
+            <div className='list-container'>
+                <h2>Available Cities</h2>
+            </div>  
+            {cities.length>0 && 
+                <ListGroupComponent cities={cities} descriptions={descriptions} />
+            }
             <div className='card-container'>
                 <Card>
                     <Card.Body>
